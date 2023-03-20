@@ -15,34 +15,34 @@ public class PgsqlDbInitializer
 
     public async Task InitializeAsync()
     {
-        try
-        {
-            using var connection = await _dbConnectionFactory.CreateConnectionAsync();
+        using var connection = await _dbConnectionFactory.CreateConnectionAsync();
 
-            await connection.ExecuteAsync("""
+        await connection.ExecuteAsync("""
             create table if not exists movies (
             id UUID primary key,
             slug TEXT not null, 
             title TEXT not null,
             yearofrelease integer not null);
         """);
-        
-            await connection.ExecuteAsync("""
+
+        await connection.ExecuteAsync("""
             create unique index concurrently if not exists movies_slug_idx
             on movies
             using btree(slug);
         """);
-        
-            await connection.ExecuteAsync("""
+
+        await connection.ExecuteAsync("""
             create table if not exists genres (
             movieId UUID references movies (Id),
             name TEXT not null);
-        """);         }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw;
-        }
-   
+        """);
+
+        await connection.ExecuteAsync("""
+            create table if not exists ratings (
+            userid uuid,
+            movieid uuid references movies (id),
+            rating integer not null,
+            primary key (userid, movieid));
+        """);
     }
 }

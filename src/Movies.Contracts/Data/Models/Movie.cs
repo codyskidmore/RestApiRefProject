@@ -10,6 +10,8 @@ public partial class Movie
     public string Slug => MovieSlugCalculator.GetMovieSlug(Title, YearOfRelease);
     public required int YearOfRelease { get; init; }
     public required List<string> Genres { get; init; } = new();
+    public required int? UserRating { get; set; }
+    public required float? AverageRating { get; set; }
 }
 
 internal static partial class MovieSlugCalculator

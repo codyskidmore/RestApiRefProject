@@ -10,6 +10,7 @@ public static class MovieApplicationConfiguration
     public static IServiceCollection AddMovieApplicationServices(this IServiceCollection services)
     {
         services.AddTransient<IMovieService, MovieService>();
+        services.AddTransient<IRatingService, RatingService>();
         services.AddValidatorsFromAssemblyContaining<IAssemblyMarker>(ServiceLifetime.Singleton);
         return services;
     }
