@@ -20,19 +20,14 @@ public class MovieSearchMapper : Profile
             .ForMember(
                 dest => dest.SortOrder, 
                 opt => opt.MapFrom(src => src.SortBy!.StartsWith('-') ? SortOrder.Descending : SortOrder.Ascending)
-            );
-        CreateMap<GetAllMoviesRequest, GetAllMoviesOptions>()
-            .ForMember(
-                dest => dest.SortField, 
-                opt => opt.MapFrom(src => src.SortBy!.Trim('+','-'))
             )
             .ForMember(
-                dest => dest.YearOfRelease, 
-                opt => opt.MapFrom(src => src.Year)
+                dest => dest.Page, 
+                opt => opt.MapFrom(src => src.Page!)
             )
-            .ForMember(
-                dest => dest.SortOrder, 
-                opt => opt.MapFrom(src => src.SortBy!.StartsWith('-') ? SortOrder.Descending : SortOrder.Ascending)
-            );
+            
+            
+            ;
+
     }
 }

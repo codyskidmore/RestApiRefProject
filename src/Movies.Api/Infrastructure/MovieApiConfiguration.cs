@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Collections.Immutable;
+using System.Reflection;
 using System.Text;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -65,7 +66,10 @@ public static class MovieApiConfiguration
             x.AssumeDefaultVersionWhenUnspecified = true;
             x.ReportApiVersions = true;
             x.ApiVersionReader = new MediaTypeApiVersionReader("api-version");
-        }).AddMvc().AddApiExplorer();
+        }).AddApiExplorer();
+
+        services.AddEndpointsApiExplorer();
+        
         return services;
     }
     

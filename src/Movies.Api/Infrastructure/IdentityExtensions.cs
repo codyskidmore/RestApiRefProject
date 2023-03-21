@@ -1,4 +1,5 @@
 ﻿using Movies.Api.Infrastructure.Constants;
+using Http = Microsoft.AspNetCore.Http;
 
 namespace Movies.Api.Infrastructure;
 
@@ -18,7 +19,7 @@ public static class IdentityExtensions
     //     return default;
     // }
     
-    public static Guid? GetUserId(this HttpContext context)
+    public static Guid? GetUserId(this Http.HttpContext context)
     {
         var userId = context.User.Claims.SingleOrDefault(x => x.Type == JwtConstants.UserId);
 
