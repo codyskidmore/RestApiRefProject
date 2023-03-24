@@ -4,8 +4,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{538BAEC0-276
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Helpers", "Helpers", "{F079FD40-9D48-468D-9F91-F02CA72779BF}"
 	ProjectSection(SolutionItems) = preProject
-		Helpers\Course.postman_collection.json = Helpers\Course.postman_collection.json
 		Helpers\movies.json = Helpers\movies.json
+		Helpers\REST_API_Reference_Calls.postman_collection.json = Helpers\REST_API_Reference_Calls.postman_collection.json
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Movies.Api", "src\Movies.Api\Movies.Api.csproj", "{9CD00975-F6A7-4B0D-A020-162FA75E0217}"
