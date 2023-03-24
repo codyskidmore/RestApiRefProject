@@ -7,4 +7,4 @@ This is a reference project illustrating many examples of what a production API 
   - Add Redis
   - Add unit tests
   - Add OpenTelemetry
-  - Add Docker
+  - Dockerizing the project.
