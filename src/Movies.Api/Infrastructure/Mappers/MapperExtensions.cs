@@ -16,8 +16,8 @@ public static class MapperExtensions
     public static MoviesResponse AddPagingInfoToResponse(this MoviesResponse response, int totalMovieCount, GetAllMoviesRequest request)
     {
         response.Total = totalMovieCount;
-        response.Page = request.Page.Value; //.GetValueOrDefault(PagedRequest.DefaultPage);
-        response.PageSize = request.PageSize.Value; //.GetValueOrDefault(PagedRequest.DefaultPageSize);
+        response.Page = request.Page!.Value;
+        response.PageSize = request.PageSize!.Value;
         return response;
     }
 }
