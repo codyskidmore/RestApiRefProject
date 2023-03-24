@@ -16,8 +16,8 @@ public static class GetAllMoviesEndpoint
 
     public static IEndpointRouteBuilder MapGetAllMovie(this IEndpointRouteBuilder app)
     {
-        // NOTE! Versioning causes REST verbs to match the wrong route. This started recently
-        // I am guessing it has to do with patch levels or Nuget package updates. Basically 
+        // NOTE! Versioning causes REST verbs to match the wrong route. This started recently.
+        // I am suspect it has to do with patch levels or Nuget package updates. Basically 
         // endpoint using the same base URL confuses the code to it can't use for different verbs.
         app.MapGet($"{ApiEndpoints.Movies.GetAll}/v1", async ([AsParameters] GetAllMoviesRequest request,
                 IMovieService movieService,
