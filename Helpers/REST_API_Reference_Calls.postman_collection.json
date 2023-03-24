@@ -1,7 +1,7 @@
 {
 	"info": {
-		"_postman_id": "2511dd93-6f86-4b2e-b079-e5a7b779e3c4",
-		"name": "REST API Course",
+		"_postman_id": "348986a2-35ef-46e8-9f3f-f605885d5bf6",
+		"name": "REST API Reference Calls",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -15,7 +15,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"userid\": \"d8566de3-b1a6-4a9b-b842-8e3887a82e41\",\r\n    \"email\": \"nick@nickchapsas.com\",\r\n    \"customClaims\": {\r\n         \"admin\": true,\r\n         \"trusted_member\": true\r\n    }\r\n}",
+							"raw": "{\r\n    \"userid\": \"d8566de3-b1a6-4a9b-b842-8e3887a82e41\",\r\n    \"email\": \"cody@codewonk.com\",\r\n    \"customClaims\": {\r\n         \"admin\": true,\r\n         \"trusted_member\": true\r\n    }\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -44,14 +44,11 @@
 				{
 					"name": "Create movie",
 					"request": {
-						"auth": {
-							"type": "noauth"
-						},
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n   \"Title\": \"Nick the Greek\",\r\n    \"YearOfRelease\": 2023,\r\n    \"Genres\": [\r\n      \"Comedy\"\r\n    ]\r\n}",
+							"raw": "{\r\n   \"Title\": \"Nick the Greek (test)\",\r\n    \"YearOfRelease\": 2023,\r\n    \"Genres\": [\r\n      \"Comedy\"\r\n    ]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -59,7 +56,7 @@
 							}
 						},
 						"url": {
-							"raw": "https://localhost:5001/api/movies",
+							"raw": "https://localhost:5001/api/movies?",
 							"protocol": "https",
 							"host": [
 								"localhost"
@@ -68,21 +65,24 @@
 							"path": [
 								"api",
 								"movies"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": null
+								}
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Get movie",
+					"name": "Get movie By Id",
 					"request": {
-						"auth": {
-							"type": "noauth"
-						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "https://localhost:5001/api/movies/",
+							"raw": "https://localhost:5001/api/movies/guid/a1a0dd6f-cedf-4069-ae60-b3d00fe8388a",
 							"protocol": "https",
 							"host": [
 								"localhost"
@@ -91,7 +91,30 @@
 							"path": [
 								"api",
 								"movies",
-								""
+								"guid",
+								"a1a0dd6f-cedf-4069-ae60-b3d00fe8388a"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get movie By Slug",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://localhost:5001/api/movies/slug/nick-the-greek-2-2023",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"api",
+								"movies",
+								"slug",
+								"nick-the-greek-2-2023"
 							]
 						}
 					},
@@ -100,6 +123,9 @@
 				{
 					"name": "Get all movies",
 					"request": {
+						"auth": {
+							"type": "noauth"
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -153,9 +179,6 @@
 				{
 					"name": "Delete movie",
 					"request": {
-						"auth": {
-							"type": "noauth"
-						},
 						"method": "DELETE",
 						"header": [],
 						"url": {
@@ -182,9 +205,6 @@
 				{
 					"name": "Rate movie",
 					"request": {
-						"auth": {
-							"type": "noauth"
-						},
 						"method": "PUT",
 						"header": [],
 						"body": {
@@ -197,7 +217,7 @@
 							}
 						},
 						"url": {
-							"raw": "https://localhost:5001/api/movies/{id}/ratings",
+							"raw": "https://localhost:5001/api/movies/117dbde2-a3a1-4ec5-8ed7-d60a6b53b68d/ratings",
 							"protocol": "https",
 							"host": [
 								"localhost"
@@ -206,7 +226,7 @@
 							"path": [
 								"api",
 								"movies",
-								"{id}",
+								"117dbde2-a3a1-4ec5-8ed7-d60a6b53b68d",
 								"ratings"
 							]
 						}
@@ -219,9 +239,6 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"auth": {
-							"type": "noauth"
-						},
 						"method": "GET",
 						"header": [],
 						"body": {
@@ -252,9 +269,6 @@
 				{
 					"name": "Delete rating",
 					"request": {
-						"auth": {
-							"type": "noauth"
-						},
 						"method": "DELETE",
 						"header": [],
 						"url": {
@@ -275,6 +289,36 @@
 					"response": []
 				}
 			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIxYTM0ZjMxZi1iODI1LTQ1NjUtYTkwNC01YWFjOTZiMmQwNWIiLCJzdWIiOiJuaWNrQG5pY2tjaGFwc2FzLmNvbSIsImVtYWlsIjoibmlja0BuaWNrY2hhcHNhcy5jb20iLCJ1c2VyaWQiOiJkODU2NmRlMy1iMWE2LTRhOWItYjg0Mi04ZTM4ODdhODJlNDEiLCJhZG1pbiI6dHJ1ZSwidHJ1c3RlZF9tZW1iZXIiOnRydWUsIm5iZiI6MTY3OTQzMDEyOSwiZXhwIjoxNjc5NDU4OTI5LCJpYXQiOjE2Nzk0MzAxMjksImlzcyI6Imh0dHBzOi8vaWRwLmNvZGV3b25rLmNvbSIsImF1ZCI6Imh0dHBzOi8vbW92aWVzLmNvZGV3b25rLmNvbSJ9.o2-A_vYTjkaWg-U_Eudrmoc7Y8sFnWpAlGjZibBacD0",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
 		}
 	]
 }
