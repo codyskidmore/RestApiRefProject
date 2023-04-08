@@ -10,6 +10,7 @@ using Movies.Api.Infrastructure.Constants;
 using Movies.Api.Infrastructure.Mappers;
 using Movies.Contracts.Application.Interfaces;
 using Movies.Contracts.Data.Models;
+using OneOf;
 
 namespace Movies.Api.Controllers;
 
@@ -39,10 +40,17 @@ public class MoviesController : ControllerBase
         CancellationToken token)
     {
         var movie = _mapper.Map<Movie>(movieRequest);
-        await _movieService.CreateAsync(movie, token);
-        var movieResponse = _mapper.Map<MovieResponse>(movie);
+        var createResult = await _movieService.CreateAsync(movie, token);
+            
+        return createResult.Match<IActionResult>(m => Ok(CreatedAtAction(nameof(Get), new { id = movie.Id }, GetMovieResponse(movie, token).Result)),
+            _ => NotFound(),
+            failed => BadRequest(failed.Errors.MapToResponse()));
+    }
+
+    private async Task<MovieResponse> GetMovieResponse(Movie movie, CancellationToken token)
+    {
         await _outputCacheStore.EvictByTagAsync(CacheConstants.MovieCacheTagName, token);
-        return CreatedAtAction(nameof(Get), new { id = movie.Id }, movieResponse);
+        return _mapper.Map<MovieResponse>(movie);
     }
     
     [HttpGet(ApiEndpoints.Movies.GetById)]
@@ -126,15 +134,14 @@ public class MoviesController : ControllerBase
         var movieWithUpdates = _mapper.Map<Movie>(updateMovieRequest);
         movieWithUpdates.Id = id;
 
-        var updatedMovie = await _movieService.UpdateAsync(movieWithUpdates, userId, token);
-        if (updatedMovie is null)
-        {
-            return NotFound();
-        }
+        var updatedMovieResult = await _movieService.UpdateAsync(movieWithUpdates, userId, token);
 
         await _outputCacheStore.EvictByTagAsync(CacheConstants.MovieCacheTagName, token);
-        
-        return Ok(_mapper.Map<MovieResponse>(movieWithUpdates));
+
+        return updatedMovieResult.Match<IActionResult>(
+            m => Ok(_mapper.Map<MovieResponse>(m)),
+            _ => NotFound(),
+            failed => BadRequest(failed.Errors.MapToResponse()));
     }
     
     [HttpDelete(ApiEndpoints.Movies.Delete)]
