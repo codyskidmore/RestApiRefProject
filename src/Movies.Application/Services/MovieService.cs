@@ -31,7 +31,7 @@ public class MovieService : IMovieService
     public async Task<OneOf<Success, Error, ValidationFailed>> CreateAsync(Movie movie, CancellationToken token = default)
     {
         movie.Id = Guid.NewGuid();
-        //await _movieValidator.ValidateAndThrowAsync(movie, token);
+
         var validationResult = await _movieValidator.ValidateAsync(movie, token);
         if (!validationResult.IsValid)
         {
@@ -48,19 +48,38 @@ public class MovieService : IMovieService
         return new Success();
     }
 
-    public Task<Movie?> GetByIdAsync(Guid id, Guid? userId = default, CancellationToken token = default)
+    public async Task<OneOf<Movie,NotFound>> GetByIdAsync(Guid id, Guid? userId = default, CancellationToken token = default)
     {
-        return _movieRepository.GetByIdAsync(id, userId, token);
+        var movieResult = await _movieRepository.GetByIdAsync(id, userId, token);
+
+        if (movieResult == null)
+        {
+            return new NotFound();
+        }
+
+        return movieResult;
     }
 
-    public Task<Movie?> GetBySlugAsync(string slug, Guid? userId = default, CancellationToken token = default)
+    public async Task<OneOf<Movie,NotFound>> GetBySlugAsync(string slug, Guid? userId = default, CancellationToken token = default)
     {
-        return _movieRepository.GetBySlugAsync(slug, userId, token);
+        var movieResult = await _movieRepository.GetBySlugAsync(slug, userId, token);
+
+        if (movieResult == null)
+        {
+            return new NotFound();
+        }
+
+        return movieResult;
     }
 
-    public async Task<IEnumerable<Movie>> GetAllAsync(GetAllMoviesOptions options, CancellationToken token = default)
+    public async Task<OneOf<MovieList, ValidationFailed>> GetAllAsync(GetAllMoviesOptions options, CancellationToken token = default)
     {
-        await _getAllMoviesOptionsValidator.ValidateAndThrowAsync(options, token);
+        var validationResult = await _getAllMoviesOptionsValidator.ValidateAsync(options, token);
+        if (!validationResult.IsValid)
+        {
+            return new ValidationFailed(validationResult.Errors);
+        }
+
         var movies = await _movieRepository.GetAllAsync(options, token);
         return movies;
     }
@@ -101,6 +120,7 @@ public class MovieService : IMovieService
     {
         return _movieRepository.DeleteByIdAsync(id, token);
     }
+    
     public Task<int> GetCountAsync(string? title, int? yearOfRelease, CancellationToken token = default)
     {
         return _movieRepository.GetCountAsync(title, yearOfRelease, token);

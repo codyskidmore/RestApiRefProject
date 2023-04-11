@@ -43,7 +43,7 @@ public class MoviesController : ControllerBase
         var createResult = await _movieService.CreateAsync(movie, token);
             
         return createResult.Match<IActionResult>(m => Ok(CreatedAtAction(nameof(Get), new { id = movie.Id }, GetMovieResponse(movie, token).Result)),
-            _ => NotFound(),
+            _ => BadRequest("Failed to Create movie."),
             failed => BadRequest(failed.Errors.MapToResponse()));
     }
 
@@ -63,13 +63,11 @@ public class MoviesController : ControllerBase
         CancellationToken token)
     {
         var userId = HttpContext.GetUserId();
-        var movie = await _movieService.GetByIdAsync(id, userId, token);
-        if (movie is null)
-        {
-            return NotFound();
-        }
-
-        return Ok(_mapper.Map<MovieResponse>(movie));
+        var movieResult = await _movieService.GetByIdAsync(id, userId, token);
+        
+        return movieResult.Match<IActionResult>(
+            m => Ok(_mapper.Map<MovieResponse>(m)),
+            _ => NotFound());
     }
     
     // [HttpGet(ApiEndpoints.Movies.Get)]
@@ -95,13 +93,11 @@ public class MoviesController : ControllerBase
         CancellationToken token)
     {
         var userId = HttpContext.GetUserId();
-        var movie = await _movieService.GetBySlugAsync(slug, userId, token);
-        if (movie is null)
-        {
-            return NotFound();
-        }
-    
-        return Ok(_mapper.Map<MovieResponse>(movie));
+        var movieResult = await _movieService.GetBySlugAsync(slug, userId, token);
+        
+        return movieResult.Match<IActionResult>(
+            m => Ok(_mapper.Map<MovieResponse>(m)),
+            _ => NotFound());
     }
     
     [HttpGet(ApiEndpoints.Movies.GetAll)]
@@ -114,11 +110,12 @@ public class MoviesController : ControllerBase
         CancellationToken token)
     {
         var options = _mapper.Map<GetAllMoviesOptions>(request).AddUserId(HttpContext.GetUserId());
-        var movies = await _movieService.GetAllAsync(options, token);
+        var moviesResult = await _movieService.GetAllAsync(options, token);
         var totalMovieCount = await _movieService.GetCountAsync(options.Title, options.YearOfRelease, token);
-        var movieResponses = _mapper.Map<IEnumerable<MovieResponse>>(movies);
-        var moviesResponse = _mapper.Map<MoviesResponse>(movieResponses).AddTotalMovieCount(totalMovieCount, request);
-        return Ok(moviesResponse);
+        
+        return moviesResult.Match<IActionResult>(
+            m => Ok(m.ToMoviesResponse(totalMovieCount, request)),
+            failed =>  BadRequest(failed.Errors.MapToResponse()));
     }    
     
     [HttpPut(ApiEndpoints.Movies.Update)]
@@ -136,10 +133,8 @@ public class MoviesController : ControllerBase
 
         var updatedMovieResult = await _movieService.UpdateAsync(movieWithUpdates, userId, token);
 
-        await _outputCacheStore.EvictByTagAsync(CacheConstants.MovieCacheTagName, token);
-
         return updatedMovieResult.Match<IActionResult>(
-            m => Ok(_mapper.Map<MovieResponse>(m)),
+            m => Ok(GetMovieResponse(m, token).Result),
             _ => NotFound(),
             failed => BadRequest(failed.Errors.MapToResponse()));
     }
