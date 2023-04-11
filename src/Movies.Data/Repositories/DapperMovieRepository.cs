@@ -103,7 +103,7 @@ public class DapperMovieRepository : IMovieRepository
         return movie;
     }
 
-    public async Task<IEnumerable<Movie>> GetAllAsync(GetAllMoviesOptions options, CancellationToken token = default)
+    public async Task<MovieList> GetAllAsync(GetAllMoviesOptions options, CancellationToken token = default)
     {
         using var connection = await _dbConnectionFactory.CreateConnectionAsync(token);
         
@@ -141,7 +141,7 @@ public class DapperMovieRepository : IMovieRepository
             pageOffset = (options.Page - 1) * options.PageSize
         }, cancellationToken: token));
         
-        var movies =  result.Select(x => new Movie
+        var movies =  (MovieList)result.Select(x => new Movie
         {
             Id = x.id,
             Title = x.title,

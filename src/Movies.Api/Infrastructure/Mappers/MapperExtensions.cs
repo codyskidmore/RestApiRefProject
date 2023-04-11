@@ -13,11 +13,11 @@ public static class MapperExtensions
         return options;
     }
 
-    public static MoviesResponse AddTotalMovieCount(this MoviesResponse response, int totalMovieCount, PagedRequest request)
-    {
-        response.Total = totalMovieCount;
-        response.Page = request.Page;
-        response.PageSize = request.PageSize;
-        return response;
-    }
+    // public static MoviesResponse AddTotalMovieCount(this MoviesResponse response, int totalMovieCount, PagedRequest request)
+    // {
+    //     response.Total = totalMovieCount;
+    //     response.Page = request.Page;
+    //     response.PageSize = request.PageSize;
+    //     return response;
+    // }
 }

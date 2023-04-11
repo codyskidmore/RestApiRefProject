@@ -12,19 +12,37 @@ public class MovieMapper : Profile
         CreateMap<Movie, MovieResponse>().ReverseMap();
         CreateMap<CreateMovieRequest, Movie>().ReverseMap();
         CreateMap<UpdateMovieRequest, Movie>().ReverseMap();
-        CreateMap<IEnumerable<MovieResponse>, MoviesResponse>()
-            .ForMember(
-                dest => dest.Items, 
-                opt => opt.MapFrom(src => src)
-            );
-        CreateMap<GetAllMoviesRequest, MoviesResponse>()
-            .ForMember(
-                dest => dest.Page,
-                opt => opt.MapFrom(src => src.Page)
-            )
-            .ForMember(
-                dest => dest.PageSize,
-                opt => opt.MapFrom(src => src.PageSize)
-            );
+    }
+}
+
+public static class MovieResponseMapper
+{
+    private static IEnumerable<MovieResponse> ToMovieResponses(this MovieList movieList)
+    {
+        return movieList.Select<Movie, MovieResponse>(m =>
+            new MovieResponse
+            {
+                Genres = m.Genres,
+                Id = m.Id,
+                Slug = m.Slug,
+                Title = m.Title,
+                YearOfRelease = m.YearOfRelease,
+                AverageRating = m.AverageRating,
+                UserRating = m.UserRating
+            }
+        );
+    }
+
+    public static MoviesResponse ToMoviesResponse(this MovieList movies, int totalMovieCount, PagedRequest request)
+    {
+        
+        
+        return new MoviesResponse
+        {
+            Items = movies.ToMovieResponses(),
+            Page = request.Page,
+            PageSize = request.PageSize,
+            Total = totalMovieCount
+        };
     }
 }
