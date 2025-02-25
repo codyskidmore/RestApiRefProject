@@ -1,19 +1,31 @@
-﻿using AutoMapper;
-using Movies.Api.Contracts.Responses;
+﻿using Movies.Api.Contracts.Responses;
 using Movies.Contracts.Api.Responses;
 using Movies.Contracts.Data.Models;
 
 namespace Movies.Api.Infrastructure.Mappers;
 
-public class RatingMapper : Profile
+public static class RatingMapper
 {
-    public RatingMapper()
+    public static IEnumerable<MovieRatingResponse> MapToResponse(this IEnumerable<MovieRating> ratings)
     {
-        CreateMap<MovieRating, MovieRatingResponse>().ReverseMap();
-        CreateMap<IEnumerable<MovieRatingResponse>, MoviesRatingResponse>()
-            .ForMember(
-                dest => dest.Ratings, 
-                opt => opt.MapFrom(src => src)
-            );
+        return ratings.Select(x => new MovieRatingResponse
+        {
+            MovieId = x.MovieId,
+            Rating = x.Rating,
+            Slug = x.Slug
+        });
+    }
+    
+    public static MoviesRatingResponse MapToMoviesRatingResponse(this IEnumerable<MovieRatingResponse> ratings)
+    {
+        return new MoviesRatingResponse
+        {
+            Ratings = ratings.Select(x => new MovieRatingResponse
+            {
+                MovieId = x.MovieId,
+                Rating = x.Rating,
+                Slug = x.Slug
+            })
+        };
     }
 }

@@ -1,11 +1,13 @@
 ﻿using Movies.Contracts.Data.Models;
+using OneOf;
+using OneOf.Types;
 
 namespace Movies.Contracts.Application.Interfaces;
 
 public interface IMovieService
 {
     // Should return MovieDto -- task for another day
-    Task<bool> CreateAsync(Movie movie, CancellationToken token = default);
+    Task<bool>  CreateAsync(Movie movie, CancellationToken token = default);
     
     Task<Movie?> GetByIdAsync(Guid id, Guid? userId = default, CancellationToken token = default);
     

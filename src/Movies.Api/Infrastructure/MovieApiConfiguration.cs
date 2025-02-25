@@ -15,8 +15,6 @@ public static class MovieApiConfiguration
 {
     public static IServiceCollection AddMovieApiServices(this IServiceCollection services)
     {
-        var moviesApiAssembly = Assembly.GetExecutingAssembly();
-        services.AddAutoMapper(moviesApiAssembly);
         return services;
     }
     public static IServiceCollection AddMovieApiAuthentication(this IServiceCollection services, IConfigurationRoot config)

@@ -1,7 +1,7 @@
-﻿using AutoMapper;
-using Movies.Api.Contracts.Responses;
+﻿using Movies.Api.Contracts.Responses;
 using Movies.Api.Infrastructure;
 using Movies.Api.Infrastructure.Constants;
+using Movies.Api.Infrastructure.Mappers;
 using Movies.Contracts.Api.Responses;
 using Movies.Contracts.Application.Interfaces;
 
@@ -15,12 +15,12 @@ public static class GetUserRatingsEndpoint
     {
         app.MapGet(ApiEndpoints.Ratings.GetUserRatings,
                 async (HttpContext context, IRatingService ratingService,
-                    IMapper mapper, CancellationToken token) =>
+                    CancellationToken token) =>
                 {
                     var userId = context.GetUserId();
                     var ratings = await ratingService.GetRatingsForUserAsync(userId!.Value, token);
-                    var ratingResponses = mapper.Map<IEnumerable<MovieRatingResponse>>(ratings);
-                    var ratingsResponse = mapper.Map<MoviesRatingResponse>(ratingResponses);
+                    var ratingResponses = ratings.MapToResponse();
+                    var ratingsResponse = ratingResponses.MapToMoviesRatingResponse();
                     return TypedResults.Ok(ratingsResponse);
                 })
             .WithName(Name)

@@ -1,7 +1,7 @@
-﻿using AutoMapper;
-using Movies.Api.Contracts.Responses;
+﻿using Movies.Api.Contracts.Responses;
 using Movies.Api.Infrastructure;
 using Movies.Api.Infrastructure.Constants;
+using Movies.Api.Infrastructure.Mappers;
 using Movies.Contracts.Application.Interfaces;
 
 namespace Movies.Api.Endpoints.Movies;
@@ -13,7 +13,7 @@ public static class GetMovieBySlugEndpoint
     public static IEndpointRouteBuilder MapGetBySlugMovie(this IEndpointRouteBuilder app)
     {
         app.MapGet(ApiEndpoints.Movies.GetBySlug, async (string slug, IMovieService movieService, 
-            HttpContext context, IMapper mapper, CancellationToken token) =>
+            HttpContext context, CancellationToken token) =>
         {
             var userId = context.GetUserId();
             var movie = await movieService.GetBySlugAsync(slug, userId, token);
@@ -22,7 +22,7 @@ public static class GetMovieBySlugEndpoint
                 return Results.NotFound();
             }
 
-            return TypedResults.Ok(mapper.Map<MovieResponse>(movie));        
+            return TypedResults.Ok(movie.MapToMovieResponse());        
         }).WithName(Name)
             .Produces<MovieResponse>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status404NotFound)

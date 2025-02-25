@@ -26,7 +26,7 @@ public class MovieService : IMovieService
         _getAllMoviesOptionsValidator = getAllMoviesOptionsValidator;
     }
 
-    public async Task<bool> CreateAsync(Movie movie, CancellationToken token = default)
+    public async Task<bool>  CreateAsync(Movie movie, CancellationToken token = default)
     {
         movie.Id = Guid.NewGuid();
         await _movieValidator.ValidateAndThrowAsync(movie, token);

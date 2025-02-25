@@ -1,11 +1,6 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.OutputCaching;
-using Movies.Api.Contracts.Requests;
-using Movies.Api.Contracts.Responses;
-using Movies.Api.Infrastructure;
+﻿using Microsoft.AspNetCore.OutputCaching;
 using Movies.Api.Infrastructure.Constants;
 using Movies.Contracts.Application.Interfaces;
-using Movies.Contracts.Data.Models;
 
 namespace Movies.Api.Endpoints.Movies;
 
